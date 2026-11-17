@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bengkel Busur</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#E8F3F0;--grid:#C2DDD6;--ink:#12304A;--ink2:#3C5A70;--card:#FFFFFF;--arm1:#E4572E;--arm2:#2467D1;--ok:#16825A;--bad:#B3361B;--amber:#FFC83D;--pb:rgba(255,200,61,.45);--ps:#B07A00;--pt:#3B2A00;--pi:#A1246F;--onink:#FFFFFF;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#0E2B33;--grid:#1C4650;--ink:#E7F4F1;--ink2:#A9C8C6;--card:#143B45;--arm1:#FF8A63;--arm2:#7DB0FF;--ok:#4FD1A0;--bad:#FF8A70;--pb:rgba(255,200,61,.2);--ps:#FFC83D;--pt:#FFE9A8;--pi:#FF9BD2;--onink:#0E2B33}}
+:root[data-theme="dark"]{--paper:#0E2B33;--grid:#1C4650;--ink:#E7F4F1;--ink2:#A9C8C6;--card:#143B45;--arm1:#FF8A63;--arm2:#7DB0FF;--ok:#4FD1A0;--bad:#FF8A70;--pb:rgba(255,200,61,.2);--ps:#FFC83D;--pt:#FFE9A8;--pi:#FF9BD2;--onink:#0E2B33}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 16px/1.55 "Atkinson Hyperlegible",system-ui,sans-serif}
+.app{max-width:1120px;margin:0 auto;padding:16px}
+header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px}
+h1{font:600 clamp(28px,5vw,42px)/1.1 Fredoka,system-ui,sans-serif;margin:0}
+.sub{margin:2px 0 0;color:var(--ink2)}
+.score{display:flex;gap:8px}
+.score span{background:var(--card);border:2px solid var(--ink);border-radius:999px;padding:4px 14px;font-weight:700}
+nav{display:flex;gap:8px;margin:16px 0 12px;flex-wrap:wrap}
+nav button{font:600 17px Fredoka,system-ui,sans-serif;border:2px solid var(--ink);background:var(--card);color:var(--ink);border-radius:999px;padding:8px 20px;cursor:pointer}
+nav button[aria-selected="true"]{background:var(--ink);color:var(--onink)}
+button:focus-visible,input:focus-visible,svg:focus-visible{outline:3px solid var(--arm2);outline-offset:2px}
+.grid{display:grid;gap:16px}
+@media(min-width:900px){.grid{grid-template-columns:1fr 350px;align-items:start}}
+.stage{background:var(--card);border:2px solid var(--ink);border-radius:18px;padding:10px}
+svg{width:100%;height:auto;display:block;border-radius:10px;touch-action:none;user-select:none}
+.tools{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;align-items:center}
+.btn{font:700 15px "Atkinson Hyperlegible",system-ui,sans-serif;border:2px solid var(--ink);background:var(--card);color:var(--ink);border-radius:10px;padding:7px 12px;cursor:pointer}
+.btn.main{background:var(--arm2);border-color:var(--arm2);color:#fff;font-size:17px;padding:9px 18px}
+.btn.on{background:var(--amber);color:#3B2A00}
+.legend{margin:8px 2px 0;font-size:14px;color:var(--ink2)}
+.legend b{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-1px;margin-right:4px}
+.panel{background:var(--card);border:2px solid var(--ink);border-left:10px solid var(--arm1);border-radius:18px;padding:16px}
+.panel h2{font:600 24px/1.2 Fredoka,system-ui,sans-serif;margin:0 0 4px}
+.panel p{margin:4px 0 10px}
+.checks{list-style:none;margin:8px 0;padding:0}
+.checks li{padding:3px 0}
+.checks .y{color:var(--ok);font-weight:700}
+.coach{background:var(--paper);border-radius:12px;padding:10px 12px;margin:8px 0}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0}
+input{width:110px;font:700 20px Fredoka,system-ui,sans-serif;padding:6px 10px;border:2px solid var(--ink);border-radius:10px;background:var(--paper);color:var(--ink)}
+.fb{min-height:48px;font-weight:700}
+.fb.ok{color:var(--ok)}.fb.bad{color:var(--bad)}
+.chip{display:inline-block;background:var(--amber);color:#3B2A00;border-radius:999px;padding:2px 12px;font-weight:700}
+[hidden]{display:none!important}
+.a1,.a2{stroke-width:4;stroke-linecap:round}
+.a1{stroke:var(--arm1)}.a2{stroke:var(--arm2)}
+.arc{fill:none;stroke:var(--ink2);stroke-width:2;stroke-dasharray:4 4}
+.lbl{fill:var(--ink);font:600 22px Fredoka,system-ui,sans-serif;text-anchor:middle;dominant-baseline:middle}
+.v1{fill:var(--arm1)}.vr{fill:none;stroke:var(--arm1);stroke-width:2}
+.mk{fill:var(--card);stroke:var(--arm2);stroke-width:3}
+.pbody{fill:var(--pb);stroke:var(--ps);stroke-width:2}
+.ptick{stroke:var(--pt);stroke-width:.9;fill:none}
+.po{fill:var(--pt);font:700 11px "Atkinson Hyperlegible",sans-serif}
+.pn{fill:var(--pi);font:700 10px "Atkinson Hyperlegible",sans-serif}
+.pbase{stroke:var(--pt);stroke-width:1.6;fill:none}
+.pc{fill:none;stroke:var(--pt);stroke-width:1.6}
+#pr{cursor:grab}
+#knob circle{fill:var(--amber);stroke:var(--ps);stroke-width:2;cursor:grab}
+#knob text{font:700 16px sans-serif;fill:#3B2A00;text-anchor:middle;dominant-baseline:middle;pointer-events:none}
+.place{cursor:crosshair}.place #pr{pointer-events:none}
+@media (prefers-reduced-motion:no-preference){.pop{animation:pop .4s}@keyframes pop{50%{transform:scale(1.25)}}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div><h1>Bengkel Busur</h1><p class="sub">Belajar mengukur dan menggambar sudut dengan busur derajat.</p></div>
+  <div class="score" aria-live="polite"><span>⭐ <b id="pts">0</b></span><span>🔥 <b id="stk">0</b></span></div>
+</header>
+<nav role="tablist" aria-label="Mode">
+  <button role="tab" data-m="learn">Belajar</button>
+  <button role="tab" data-m="measure">Ukur sudut</button>
+  <button role="tab" data-m="draw">Gambar sudut</button>
+</nav>
+<div class="grid">
+  <section class="stage">
+    <svg id="svg" viewBox="0 0 760 500" tabindex="0" aria-label="Meja kerja busur. Panah menggeser busur, tombol Q dan E memutar.">
+      <defs><pattern id="g" width="25" height="25" patternUnits="userSpaceOnUse"><path d="M25 0H0V25" fill="none" style="stroke:var(--grid)" stroke-width="1"/></pattern></defs>
+      <rect width="760" height="500" fill="url(#g)"/>
+      <g id="scene"></g>
+      <g id="pr"></g>
+    </svg>
+    <div class="tools">
+      <button class="btn" id="ccw">↺ 1°</button>
+      <button class="btn" id="cw">↻ 1°</button>
+      <button class="btn" id="flip">Balik 180°</button>
+      <button class="btn" id="park">Taruh busur</button>
+    </div>
+    <p class="legend"><b style="background:var(--pt)"></b>Angka hitam: skala luar &nbsp; <b style="background:var(--pi)"></b>Angka magenta: skala dalam. Seret busur untuk menggeser, tarik bulatan kuning untuk memutar.</p>
+  </section>
+  <aside class="panel">
+    <h2 id="title"></h2>
+    <p id="desc"></p>
+    <ul class="checks" id="checks"></ul>
+    <div class="coach" id="coach" hidden></div>
+    <div class="row" id="ansRow">
+      <label for="ans">Jawabanmu:</label><input id="ans" type="number" inputmode="decimal" min="0" max="180"> <b>°</b>
+    </div>
+    <div class="row">
+      <button class="btn main" id="go">Cek jawaban</button>
+      <button class="btn" id="place" hidden>Tandai titik</button>
+      <button class="btn" id="hint">Bantuan</button>
+    </div>
+    <div class="fb" id="fb" role="status" aria-live="polite"></div>
+    <button class="btn main" id="next" hidden></button>
+  </aside>
+</div>
+</div>
+<script>
+const $=s=>document.querySelector(s),svg=$('#svg');
+const V={x:300,y:300},L=250,R=170,PARK={x:560,y:420};
+const rd=d=>d*Math.PI/180,dg=r=>r*180/Math.PI,n360=a=>((a%360)+360)%360;
+const pol=(c,a,r)=>[c.x+r*Math.cos(rd(a)),c.y-r*Math.sin(rd(a))];
+const LESSONS=[{dir:0,s:1,size:60},{dir:180,s:-1,size:50}];
+const S={mode:'learn',lesson:0,dir:0,s:1,size:60,rot:15,P:{...PARK},mark:null,hint:false,place:false,done:false,pts:0,streak:0};
+
+(function(){
+  let t='',lab='';
+  for(let d=0;d<=180;d++){
+    const l=d%10==0?16:d%5==0?11:6,c=Math.cos(rd(d)),s=Math.sin(rd(d));
+    t+=`M${(R*c).toFixed(1)} ${(-R*s).toFixed(1)}L${((R-l)*c).toFixed(1)} ${(-(R-l)*s).toFixed(1)}`;
+    if(d%10==0){
+      const f=(r,v,k)=>`<text class="${k}" transform="translate(${(r*c).toFixed(1)} ${(-r*s).toFixed(1)}) rotate(${90-d})" text-anchor="middle" dominant-baseline="middle">${v}</text>`;
+      lab+=f(R-30,d,'po')+f(R-50,180-d,'pn');
+    }
+  }
+  $('#pr').innerHTML=`<path class="pbody" d="M${-R} 18H${R}V0A${R} ${R} 0 0 0 ${-R} 0Z"/><path class="ptick" d="${t}"/>${lab}<path class="pbase" d="M${-R} 0H${R}M0 0V18"/><circle class="pc" r="6"/><g id="knob"><circle cx="${R+26}" r="13"/><text x="${R+26}">↻</text></g>`;
+})();
+
+function chk(){
+  const dc=Math.hypot(S.P.x-V.x,S.P.y-V.y);
+  let d=((S.rot-S.dir)%180+180)%180; if(d>90)d-=180;
+  let c3=true;
+  if(S.mode!=='draw'){const rel=n360(S.dir+S.s*S.size-S.rot);c3=rel>0&&rel<180}
+  return[dc<=9,Math.abs(d)<=3,c3];
+}
+function coach(){
+  const[c1,c2,c3]=chk();
+  if(!c1)return'Seret busur sampai titik kecil di tengah garis dasar menimpa titik sudut (bulatan merah).';
+  if(!c2)return'Putar busur sampai garis dasar menimpa lengan merah. Tarik bulatan ↻ di ujung busur, atau pakai tombol putar.';
+  if(!c3)return'Lengkungan busur harus menghadap lengan biru. Tekan “Balik 180°”.';
+  const r1=n360(S.dir-S.rot),sc=(r1>90&&r1<270)?'skala dalam (angka magenta)':'skala luar (angka hitam)';
+  return S.mode==='draw'
+    ?`Lengan merah menunjuk angka 0 di ${sc}. Cari angka ${S.size} di skala itu, tekan “Tandai titik”, lalu ketuk angka tersebut.`
+    :`Lengan merah menunjuk angka 0 di ${sc}. Baca angka tempat lengan biru memotong skala itu.`;
+}
+function render(){
+  const a1=S.dir,a2=S.dir+S.s*S.size,e1=pol(V,a1,L),e2=pol(V,a2,L);
+  let h=`<line class="a1" x1="${V.x}" y1="${V.y}" x2="${e1[0]}" y2="${e1[1]}"/>`;
+  if(S.mode!=='draw'){
+    h+=`<line class="a2" x1="${V.x}" y1="${V.y}" x2="${e2[0]}" y2="${e2[1]}"/>`;
+    h+=`<path class="arc" d="M${pol(V,a1,50)}A50 50 0 0 ${S.s>0?0:1} ${pol(V,a2,50)}"/>`;
+    const q=pol(V,(a1+a2)/2,80);h+=`<text class="lbl" x="${q[0]}" y="${q[1]}">?</text>`;
+  }else{
+    const q=pol(V,a1+S.s*S.size/2,85);h+=`<path class="arc" d="M${pol(V,a1,50)}A50 50 0 0 ${S.s>0?0:1} ${pol(V,a1+S.s*S.size,50)}"/><text class="lbl" x="${q[0]}" y="${q[1]}">${S.size}°</text>`;
+  }
+  if(S.mark){
+    const m=S.mark,ra=dg(Math.atan2(-(m.y-V.y),m.x-V.x)),e=pol(V,ra,L);
+    h+=`<line class="a2" x1="${V.x}" y1="${V.y}" x2="${e[0]}" y2="${e[1]}"/><circle class="mk" cx="${m.x}" cy="${m.y}" r="6"/>`;
+  }
+  h+=`<circle class="vr" cx="${V.x}" cy="${V.y}" r="11"/><circle class="v1" cx="${V.x}" cy="${V.y}" r="4"/>`;
+  $('#scene').innerHTML=h;
+  $('#pr').setAttribute('transform',`translate(${S.P.x} ${S.P.y}) rotate(${-S.rot})`);
+  ui();
+}
+function ui(){
+  const m=S.mode,c=chk(),draw=m==='draw';
+  const names=['Titik pusat busur ada di titik sudut','Garis dasar menimpa lengan merah'];
+  if(!draw)names.push('Lengkungan menghadap lengan biru');
+  const showChecks=m==='learn'||S.hint;
+  $('#checks').hidden=!showChecks;
+  $('#checks').innerHTML=names.map((n,i)=>`<li class="${c[i]?'y':''}">${c[i]?'✓':'○'} ${n}</li>`).join('');
+  $('#coach').hidden=!showChecks;$('#coach').textContent=coach();
+  $('#ansRow').hidden=draw;$('#place').hidden=!draw;
+  $('#place').textContent=S.place?'Kembali geser busur':'Tandai titik';
+  $('#place').classList.toggle('on',S.place);
+  svg.classList.toggle('place',S.place);
+  $('#go').hidden=S.done;$('#hint').hidden=S.done;
+  $('#title').textContent=m==='learn'?`Pelajaran ${S.lesson+1} dari 2`:draw?`Gambar sudut ${S.size}°`:'Berapa derajat sudut ini?';
+  $('#desc').textContent=m==='learn'
+    ?(S.lesson?'Sekarang lengan merah ada di kiri. Perhatikan skala yang dipakai.':'Ikuti langkah-langkahnya. Daftar centang akan menyala saat busurmu sudah benar.')
+    :draw?'Lengan merah sudah ada. Pasang busur, lalu gambar lengan kedua dengan menandai titik.'
+    :'Pasang busur dengan benar, lalu baca ukuran sudut antara lengan merah dan lengan biru.';
+}
+function fb(t,k){const e=$('#fb');e.textContent=t;e.className='fb '+(k||'')}
+function award(ok){
+  if(ok){S.pts+=10+Math.min(S.streak,5)*2;S.streak++}else S.streak=0;
+  $('#pts').textContent=S.pts;$('#stk').textContent=S.streak;
+  const p=$('#pts');p.classList.remove('pop');void p.offsetWidth;if(ok)p.classList.add('pop');
+}
+const jenis=z=>z<90?'sudut lancip':z==90?'sudut siku-siku':z<180?'sudut tumpul':'sudut lurus';
+function win(msg){
+  S.done=true;award(true);
+  $('#fb').className='fb ok';
+  $('#fb').innerHTML=`🎉 ${msg} Ini <span class="chip">${jenis(S.size)}</span>`;
+  const n=$('#next');n.hidden=false;
+  n.textContent=S.mode==='learn'?(S.lesson<1?'Lanjut ke pelajaran 2':'Mulai latihan mengukur'):'Soal berikutnya';
+  ui();
+}
+$('#go').onclick=()=>{
+  if(S.done)return;
+  if(S.mode==='draw'){
+    if(!S.mark){fb('Tandai dulu satu titik pada skala busur, lalu cek lagi.');return}
+    const ra=dg(Math.atan2(-(S.mark.y-V.y),S.mark.x-V.x)),diff=Math.abs(n360(ra-S.dir+180)-180);
+    if(Math.abs(diff-S.size)<=2.5)win(`Sudutmu ${Math.round(diff)}°, tepat sasaran.`);
+    else{award(false);fb(`Sudutmu sekitar ${Math.round(diff)}°, targetnya ${S.size}°. Geser titiknya lagi.`,'bad')}
+    return;
+  }
+  const v=parseFloat($('#ans').value);
+  if(isNaN(v)){fb('Tulis angka jawabanmu dulu.');return}
+  if(Math.abs(v-S.size)<=2)win(`Benar, sudutnya ${S.size}°.`);
+  else{
+    award(false);
+    fb(Math.abs(v-(180-S.size))<=2?'Hampir! Kamu membaca skala yang salah. Mulai hitung dari angka 0 di lengan merah.':'Belum tepat. Cek lagi posisi busur lewat tombol Bantuan.','bad');
+  }
+};
+$('#hint').onclick=()=>{S.hint=!S.hint;ui()};
+$('#place').onclick=()=>{S.place=!S.place;ui()};
+$('#next').onclick=()=>{
+  if(S.mode==='learn'){if(S.lesson<1){S.lesson++;newTask()}else setMode('measure')}
+  else newTask();
+};
+function newTask(){
+  S.done=false;S.mark=null;S.place=false;S.hint=false;S.P={...PARK};S.rot=15;
+  $('#ans').value='';$('#next').hidden=true;fb('');
+  if(S.mode==='learn')Object.assign(S,LESSONS[S.lesson]);
+  else{
+    let d,s,z;
+    do{
+      d=15*Math.floor(Math.random()*13);s=Math.random()<.5?1:-1;
+      z=S.mode==='draw'?5*(4+Math.floor(Math.random()*29)):(Math.random()<.5?5*(2+Math.floor(Math.random()*33)):10+Math.floor(Math.random()*160));
+    }while(d+s*z<-20||d+s*z>200);
+    S.dir=d;S.s=s;S.size=z;
+  }
+  render();
+}
+function setMode(m){
+  S.mode=m;S.lesson=0;
+  document.querySelectorAll('nav button').forEach(b=>b.setAttribute('aria-selected',b.dataset.m===m));
+  newTask();
+}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>setMode(b.dataset.m));
+
+const rot=d=>{S.rot=n360(S.rot+d);render()};
+$('#ccw').onclick=()=>rot(1);$('#cw').onclick=()=>rot(-1);
+$('#flip').onclick=()=>rot(180);
+$('#park').onclick=()=>{S.P={...PARK};S.rot=15;render()};
+
+function pt(e){const p=svg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;const q=p.matrixTransform(svg.getScreenCTM().inverse());return{x:q.x,y:q.y}}
+let drag=null;
+$('#pr').addEventListener('pointerdown',e=>{
+  const q=pt(e);
+  drag=e.target.closest('#knob')?{t:'rot'}:{t:'move',dx:q.x-S.P.x,dy:q.y-S.P.y};
+  svg.setPointerCapture(e.pointerId);e.preventDefault();
+});
+svg.addEventListener('pointerdown',e=>{
+  if(S.place&&S.mode==='draw'&&!S.done){S.mark=pt(e);render()}
+});
+svg.addEventListener('pointermove',e=>{
+  if(!drag)return;
+  const q=pt(e);
+  if(drag.t==='move'){
+    S.P={x:Math.max(0,Math.min(760,q.x-drag.dx)),y:Math.max(0,Math.min(500,q.y-drag.dy))};
+    if(Math.hypot(S.P.x-V.x,S.P.y-V.y)<14)S.P={...V};
+  }else{
+    S.rot=n360(dg(Math.atan2(-(q.y-S.P.y),q.x-S.P.x)));
+    let d=((S.rot-S.dir)%180+180)%180;if(d>90)d-=180;
+    if(Math.abs(d)<2.5)S.rot=n360(S.rot-d);
+  }
+  render();
+});
+['pointerup','pointercancel'].forEach(t=>svg.addEventListener(t,()=>{drag=null}));
+svg.addEventListener('keydown',e=>{
+  const st=e.shiftKey?10:1,k=e.key;
+  if(k.startsWith('Arrow')){
+    S.P.x+=k==='ArrowRight'?st:k==='ArrowLeft'?-st:0;S.P.y+=k==='ArrowDown'?st:k==='ArrowUp'?-st:0;
+  }else if(k==='q'||k==='Q')S.rot=n360(S.rot+1);
+  else if(k==='e'||k==='E')S.rot=n360(S.rot-1);
+  else return;
+  e.preventDefault();render();
+});
+setMode('learn');
+</script>
+</body>
+</html>
